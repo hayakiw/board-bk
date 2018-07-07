@@ -43,3 +43,28 @@ Route::group(['middleware' => ['auth:web']], function () {
     });
 
 });
+
+Route::group(['namespace' => 'Admin', 'prefix' => '_admin'], function () {
+    Route::group(['middleware' => 'guest'], function () {
+        Route::get('signin', [
+            'as' => 'admin.auth.signin_form',
+            'uses' => 'AuthController@signinForm',
+        ]);
+        Route::post('signin', [
+            'as' => 'admin.auth.signin',
+            'uses' => 'AuthController@signin',
+        ]);
+    });
+
+    Route::group(['middleware' => 'auth:admin', 'as' => 'admin.'], function () {
+        Route::get('signout', [
+            'as' => 'auth.signout',
+            'uses' => 'AuthController@signout',
+        ]);
+
+        Route::get('/', [
+            'as' => 'root.index',
+            'uses' => 'RootController@index',
+        ]);
+    });
+});

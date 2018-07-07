@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <form class="form" action="{{ route('auth.signin') }}" accept-charset="utf-8" method="post">
+    <form class="form" action="{{ route('admin.auth.signin') }}" accept-charset="utf-8" method="post">
         @csrf
       <div class="w50 center">
         <h1>ログイン</h1>
@@ -16,15 +16,15 @@
         <div class="panel-body">
           <table class="deco-tb w100 m_u20">
             <tr>
-              <th class="w20"><label class="control-label">メールアドレス <span class="required">*</span></label></th>
-              <td @if ($errors->has('email'))class="has-error"@endif><input type="input" name="email" class="form-control w45" required value="{{ old('email') }}">
-                @if ($errors->has('email'))
-                    <div class="attention">{{ $errors->first('email') }}</div>
+              <th class="w20"><label class="control-label">ユーザーID <span class="required">*</span></label></th>
+              <td @if ($errors->has('name'))class="has-error"@endif><input type="input" name="name" class="form-control w45" required value="{{ old('name') }}">
+                @if ($errors->has('name'))
+                    <div class="attention">{{ $errors->first('name') }}</div>
                 @endif</td>
             </tr>
             <tr>
               <th><label class="control-label">パスワード <span class="required">*</span></label></th>
-              <td @if ($errors->has('email'))class="has-error"@endif><input type="password" name="password" class="form-control w45" required value="">
+              <td @if ($errors->has('name'))class="has-error"@endif><input type="password" name="password" class="form-control w45" required value="">
                 @if ($errors->has('password'))
                     <div class="attention">{{ $errors->first('password') }}</div>
                 @endif</td>

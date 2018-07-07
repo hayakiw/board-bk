@@ -21,10 +21,10 @@ class CreateTables extends Migration
             $t->bigIncrements('id');
             
             $t->string('name');
-            $t->string('email')->unique();
             $t->string('password');
             $t->rememberToken();
             $t->timestamps();
+            $t->softDeletes();
         });
 
         // ユーザー

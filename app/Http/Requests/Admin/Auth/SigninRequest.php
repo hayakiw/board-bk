@@ -1,10 +1,16 @@
 <?php
 
-namespace App\Http\Requests\Auth;
-use App\Http\Requests\Request;
+namespace App\Http\Requests\Admin\Auth;
 
-class SigninRequest extends Request
+use Illuminate\Foundation\Http\FormRequest;
+
+class SigninRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize()
     {
         return true;
@@ -13,7 +19,7 @@ class SigninRequest extends Request
     public function rules()
     {
         return [
-            'email' => [
+            'name' => [
                 'required',
             ],
             'password' => [
@@ -25,7 +31,7 @@ class SigninRequest extends Request
     public function messages()
     {
         return [
-            'email.required' => 'メールアドレスを入力してください',
+            'name.required' => 'ユーザーIDを入力してください',
             'password.required' => 'パスワードを入力してください',
         ];
     }
