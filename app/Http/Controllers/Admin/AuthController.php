@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-use App\Http\Requests\Auth as AuthRequest;
-use App\Models\Account;
+use App\Http\Requests\Admin\Auth as AuthRequest;
+use App\Models\Admin;
 
 class AuthController extends Controller
 {
@@ -13,7 +14,7 @@ class AuthController extends Controller
 
     public function signinForm()
     {
-        return view('auth.signin_form');
+        return view('admin.auth.signin_form');
     }
 
     /**
@@ -33,21 +34,20 @@ class AuthController extends Controller
             $this->sendLockoutResponse($request);
         }
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('name', 'password');
 
         $remember = $request->has('remember');
 
-        if (auth()->guard('web')->attempt($credentials, $remember)) {
+        if (auth()->guard('admin')->attempt($credentials, $remember)) {
             $this->clearLoginAttempts($request);
 
             // 処理日リセット
-            $request->session()->forget(Account::SESSION_KEY_DATE);
+            // $request->session()->forget(Account::SESSION_KEY_DATE);
 
             return redirect()
-                ->route('root.index')
+                ->route('admin.root.index')
                 ->with('info', 'ログインしました。');
         }
-
         if (!$lockedOut) {
             $this->incrementLoginAttempts($request);
         }
@@ -56,15 +56,15 @@ class AuthController extends Controller
             ->back()
             ->withInput($credentials)
             ->withErrors([
-                'email' => '正しいユーザーID、パスワードを入力してください。',
+                'name' => '正しいユーザーID、パスワードを入力してください。',
             ]);
     }
 
     public function signout()
     {
-        auth()->guard('web')->logout();
+        auth()->guard('admin')->logout();
         return redirect()
-            ->route('auth.signin')
+            ->route('admin.auth.signin')
             ->with('info', 'ログアウトしました。')
             ;
     }

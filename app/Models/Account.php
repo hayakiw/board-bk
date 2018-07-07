@@ -50,15 +50,12 @@ class Account extends Authenticatable
     ];
 
     protected $fillable = [
-        'userid',
+        'email',
         'password',
-        'permit_application',
-        'permit_loan',
-        'permit_refund',
-        'permit_statistic',
-        'permit_master',
-        'permit_negotiate',
-        'permit_account',
+        'first_name',
+        'last_name',
+        'first_name_kana',
+        'last_name_kana',
     ];
 
     protected $hidden = [
@@ -67,7 +64,7 @@ class Account extends Authenticatable
 
     public function getName()
     {
-        return $this->userid;
+        return $this->first_name;
     }
 
     /**

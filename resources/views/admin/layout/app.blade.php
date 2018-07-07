@@ -1,7 +1,7 @@
 @php
     /* @var string $page_title 画面のタイトル */
     /* @var Illuminate\Auth\SessionGuard $session_guard */
-    $session_guard = Auth::guard('web');
+    $session_guard = Auth::guard('admin');
 @endphp
 <!DOCTYPE html>
 <html lang="ja">
@@ -53,12 +53,11 @@ $(document).ready(function() {
   <div class="utility">
     <div class="inner">
       <ul class="clearfix">
-        {{-- <li class="date">処理日 : {{ Auth::guard('web')->user()->getDate() }}</li> --}}
         <li class="clearfix">
           <ul class="setting">
             <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">設定 <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="{{ route('accounts.index') }}">アカウント管理</a></li>
+                <li><a href="#">アカウント管理</a></li>
               </ul>
             </li>
           </ul>
@@ -70,7 +69,7 @@ $(document).ready(function() {
   <!-- / .utility -->
   @endif
   <div class="inner clearfix">
-    <div class="site-title"> <a href="{{ route('root.index') }}">{{ config('my.site_title') }}</a></div>
+    <div class="site-title"> <a href="{{ route('admin.root.index') }}">{{ config('my.site_title') }}</a></div>
     <!-- / .title -->
     <div id="gNav" class="clearfix">
       @if($session_guard->check())
@@ -78,12 +77,12 @@ $(document).ready(function() {
         <li @if(Request::is(['print', 'print/*'])) active @endif> <a href=""> xxx </a></li>
       </ul>
       <ul class="account">
-        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::guard('web')->user()->getName() }}さん <span class="caret"></span></a>
+        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::guard('admin')->user()->getName() }}さん <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li role="separator" class="divider"></li>
             <li><a href="#">パスワｰド変更</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="{{ route('auth.signout') }}">ログアウト</a></li>
+            <li><a href="{{ route('admin.auth.signout') }}">ログアウト</a></li>
           </ul>
         </li>
       </ul>
@@ -91,7 +90,7 @@ $(document).ready(function() {
 
       @if (!$session_guard->check())
       <ul class="account">
-        <li><a href="{{ route('auth.signin') }}" class="exhibit">ログイン</a></li>
+        <li><a href="{{ route('admin.auth.signin') }}" class="exhibit">ログイン</a></li>
       </ul>
       @endif
 
