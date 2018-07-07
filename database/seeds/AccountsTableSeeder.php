@@ -9,20 +9,17 @@ class AccountsTableSeeder extends Seeder
     {
         $users = [
             [
-                'userid' => 'test',
+                'email' => 'test@example.com',
                 'password' => bcrypt('test'),
-                'permit_application' => '1',
-                'permit_loan' => '1',
-                'permit_refund' => '1',
-                'permit_statistic' => '1',
-                'permit_master' => '1',
-                'permit_negotiate' => '1',
-                'permit_account' => '1',
+                'first_name' => 'test',
+                'last_name' => 'user',
+                'first_name_kana' => 'test',
+                'last_name_kana' => 'user',
             ],
         ];
 
         foreach ($users as $u) {
-            $account = Account::where('userid', '=', $u['userid'])->first();
+            $account = Account::where('email', '=', $u['email'])->first();
             if (!$account) {
                 $account = new Account();
             }

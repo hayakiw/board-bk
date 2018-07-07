@@ -17,19 +17,27 @@ class CreateTables extends Migration
         // テーブル作成
         //--------------------------------------------------
         // 管理者
+        Schema::create('admins', function (Blueprint $t) {
+            $t->bigIncrements('id');
+            
+            $t->string('name');
+            $t->string('email')->unique();
+            $t->string('password');
+            $t->rememberToken();
+            $t->timestamps();
+        });
+
+        // ユーザー
         Schema::create('accounts', function (Blueprint $t) {
             $t->bigIncrements('id');
 
-            $t->string('userid');
+            $t->string('email')->unique();
             $t->string('password', 255);
 
-            $t->tinyInteger('permit_application')->unsigned()->comment('申請処理');
-            $t->tinyInteger('permit_loan')->unsigned()->comment('貸与処理');
-            $t->tinyInteger('permit_refund')->unsigned()->comment('返還処理');
-            $t->tinyInteger('permit_statistic')->unsigned()->comment('統計資料等');
-            $t->tinyInteger('permit_master')->unsigned()->comment('マスタ管理');
-            $t->tinyInteger('permit_negotiate')->unsigned()->comment('交渉履歴');
-            $t->tinyInteger('permit_account')->unsigned()->comment('アカウント管理');
+            $t->string('first_name');
+            $t->string('last_name');
+            $t->string('first_name_kana');
+            $t->string('last_name_kana');
 
             $t->rememberToken();
 
@@ -51,5 +59,6 @@ class CreateTables extends Migration
         //テーブル削除
         //--------------------------------------------------
         Schema::dropIfExists('accounts');
+        Schema::dropIfExists('admins');
     }
 }
