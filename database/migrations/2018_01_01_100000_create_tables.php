@@ -35,10 +35,14 @@ class CreateTables extends Migration
             $t->string('password', 255)->nullable();
             $t->timestamp('is_signed_up')->nullable();
 
-            $t->string('first_name', 100);
-            $t->string('last_name', 100);
-            $t->string('first_name_kana', 200);
-            $t->string('last_name_kana', 200);
+            $t->string('first_name', 100)->nullable();
+            $t->string('last_name', 100)->nullable();
+            $t->string('first_name_kana', 200)->nullable();
+            $t->string('last_name_kana', 200)->nullable();
+
+            $t->string('confirmation_token')->nullable();
+            $t->timestamp('confirmation_sent_at')->nullable();
+            $t->timestamp('confirmated_at')->nullable();
 
             $t->rememberToken();
 
@@ -94,15 +98,15 @@ class CreateTables extends Migration
         });
 
         // カテゴリ
-        // Schema::create('categories', function (Blueprint $t) {
-        //     $t->bigIncrements('id');
+        Schema::create('categories', function (Blueprint $t) {
+            $t->bigIncrements('id');
 
-        //     $t->morphs('categorizable');
-        //     $t->string('name', 255);
+            $t->morphs('categorizable');
+            $t->string('name', 255);
 
-        //     $t->timestamps();
-        //     $t->softDeletes();
-        // });
+            $t->timestamps();
+            $t->softDeletes();
+        });
 
         // コメント
         Schema::create('comments', function (Blueprint $t) {

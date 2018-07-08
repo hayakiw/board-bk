@@ -24,6 +24,9 @@ class Account extends Authenticatable
         'last_name',
         'first_name_kana',
         'last_name_kana',
+        'confirmation_token',
+        'confirmation_sent_at',
+        'confirmated_at',
     ];
 
     protected $hidden = [

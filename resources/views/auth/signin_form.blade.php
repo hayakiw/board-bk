@@ -31,6 +31,7 @@
             </tr>
           </table>
           <button type="submit" class="btn block btn-info w50 center"> ログイン</button>
+        <a href="{{ route('account.create') }}">新規登録</a>
         </div>
         <!-- /. panel-body -->
       </div>
