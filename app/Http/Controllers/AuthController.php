@@ -41,7 +41,7 @@ class AuthController extends Controller
             $this->clearLoginAttempts($request);
 
             // 処理日リセット
-            $request->session()->forget(Account::SESSION_KEY_DATE);
+            // $request->session()->forget(Account::SESSION_KEY_DATE);
 
             return redirect()
                 ->route('root.index')
