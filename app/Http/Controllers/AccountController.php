@@ -10,6 +10,8 @@ use Mail;
 use App\Http\Requests\Account as AccountRequest;
 use Carbon\Carbon;
 use App\Models\Account;
+use App\Models\Workspace;
+use App\Models\AccountWorkspace;
 
 class AccountController extends Controller
 {
@@ -128,10 +130,29 @@ class AccountController extends Controller
 
             if ($account && $account->update($accountData)) {
                 // todo: New create account is new workspace create 
-                \DB::commit();
-                return redirect()
-                    ->route('root.index')
-                    ->with(['info' => '会員情報を登録しました。']);
+                $workspaceData = $request->only('workspace');
+                if (!($workspace = Workspace::create($workspaceData['workspace']))) {
+                    $errors[] = 'ワークスペースを登録できませんでした。';
+                }
+
+                if (!$errors) {
+                    $relateData = [
+                        'account_id' => $account->id,
+                        'workspace_id' => $workspace->id,
+                        'role' => AccountWorkspace::ROLE_ADMIN,
+                        'invite_at' => Carbon::now(),
+                    ];
+                    if (!(AccountWorkspace::create($relateData))) {
+                        $errors[] = 'ワークスペースを登録できませんでした。';
+                    }
+                }
+
+                if (!$errors) {
+                    \DB::commit();
+                    return redirect()
+                        ->route('root.index')
+                        ->with(['info' => '会員情報を登録しました。']);
+                }
             }
 
             \DB::rollBack();
@@ -140,7 +161,7 @@ class AccountController extends Controller
 
         return redirect()
             ->back()
-            ->withError('登録に失敗しました。' . implode(',', $errors))
+            ->withError('登録に失敗しました。')
             ;
     }
 

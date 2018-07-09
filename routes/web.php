@@ -57,6 +57,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         'uses' => 'RootController@index',
     ]);
 
+
     //アカウント管理
     Route::group(['middleware' => ['auth:web', 'can:account']], function () {
         Route::resource('accounts', 'AccountController');

@@ -37,4 +37,9 @@ class Account extends Authenticatable
     {
         return $this->first_name;
     }
+
+    public function Workspaces()
+    {
+        return $this->belongsToMany(\App\Models\Workspace::class)->withPivot('invite_at', 'entry_at');;
+    }
 }

@@ -15,4 +15,9 @@ class Workspace extends Model
     protected $fillable = [
         'name', 'description',
     ];
+
+    public function Accounts()
+    {
+        return $this->hasMany(\App\Models\AccountWorkspace::class)->withPivot('invite_at', 'entry_at');
+    }
 }
