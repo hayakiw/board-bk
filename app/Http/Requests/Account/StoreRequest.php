@@ -14,46 +14,24 @@ class StoreRequest extends Request
      */
     public function authorize()
     {
-        return \Auth::guard('web')->check();
+        return !\Auth::guard('web')->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
-            'userid' => [
+            'email' => [
                 'required',
-                'between:4,10',
-                'unique:accounts,userid,NULL,id,deleted_at,NULL',
-                'ascii',
-            ],
-            'password' => [
-                'required',
-                'between:4,10',
-                'ascii',
+                'unique:accounts,email',
             ],
         ];
     }
 
-    /**
-     * Get the validation error messages that apply to the request.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [
-            'userid.required' => '"ユーザーID"は必ず入力してください',
-            'userid.unique' => '入力した“ユーザーID”は既に登録されています',
-            'userid.between' => '"ユーザーID"は:min〜:max文字で入力してください',
-            'userid.ascii' => '"ユーザーID"を正しく入力してください',
-            'password.required' => '“パスワード"は必ず入力してください',
-            'password.between' => '"パスワード"は:min〜:max文字で入力してください',
-            'password.ascii' => '"パスワード"を正しく入力してください',
+            'email.required' => 'メールアドレスを入力してください',
+            'email.unique' => 'すでに登録されたメールアドレスです',
         ];
     }
 }

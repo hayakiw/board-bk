@@ -14,6 +14,26 @@
 
 
 Route::group(['middleware' => ['guest:web']], function () {
+    Route::get('signup', [
+        'as' => 'account.create',
+        'uses' => 'AccountController@create',
+    ]);
+
+    Route::post('signup', [
+        'as' => 'account.store',
+        'uses' => 'AccountController@store',
+    ]);
+
+    Route::get('activate/{token}', [
+        'as' => 'account.confirm',
+        'uses' => 'AccountController@confirm',
+    ]);
+
+    Route::post('activate', [
+        'as' => 'account.activate',
+        'uses' => 'AccountController@activate',
+    ]);
+
     Route::get('signin', [
         'as' => 'auth.signin_form',
         'uses' => 'AuthController@signinForm',

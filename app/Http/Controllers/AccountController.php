@@ -5,17 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Mail;
 use App\Http\Requests\Account as AccountRequest;
 use Carbon\Carbon;
 use App\Models\Account;
 
 class AccountController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         $accountBuilder = Account::query();
@@ -38,36 +35,113 @@ class AccountController extends Controller
      */
     public function create()
     {
-        $account = new Account;
-        return view('account.create')
-            ->with([
-                'account' => $account
-            ])
-        ;
+        return view('account.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(AccountRequest\StoreRequest $request)
     {
-        $accountData = $this->getAccountData($request);
-        $accountData['password'] = bcrypt($accountData['password']);
+        $accountData = $request->only('email');
+
+        $token = hash_hmac('sha256', Str::random(40), config('app.key'));
+        $accountData['confirmation_token'] = $token;
+        $accountData['confirmation_sent_at'] = Carbon::now();
+
+        \DB::beginTransaction();
 
         if ($account = Account::create($accountData)) {
-            $request->session()->flash('info', '登録しました。');
+            \DB::commit();
+
+            Mail::send(
+                ['text' => 'mail.account_created'],
+                compact('token', 'account'),
+                function ($m) use ($account) {
+                    $m->from(
+                        config('my.mail.from'),
+                        config('my.mail.name')
+                    );
+                    $m->to($account->email);
+                    $m->subject(
+                        config('my.account.created.mail_subject')
+                    );
+                }
+            );
+
             return redirect()
-                ->route('accounts.index')
+                ->route('root.index')
+                ->with(['info' => '確認メールを送信しましたのでご確認ください。'])
             ;
         }
+
+        \DB::rollBack();
 
         return redirect()
             ->back()
             ->withInput($accountData)
         ;
+    }
+
+    public function confirm(Request $request, $token)
+    {
+        $account = Account::where('confirmation_token', $token)
+            ->where('confirmation_sent_at', '>', Carbon::now()->subDay(config('my.reset_password_request.expires_in')))
+            ->firstOrFail()
+            ;
+
+        if ($account) {
+            return view('account.confirm', compact('account', 'token'));
+        }
+
+        return redirect()
+            ->route('root.index')
+            ->withError('不正なアクセスです。')
+            ;
+    }
+
+    public function activate(AccountRequest\ActivateRequest $request)
+    {
+        $accountData = $request->only([
+            'last_name', 'first_name', 'last_name_kana', 'first_name_kana',
+            'password',
+        ]);
+
+        $accountData['confirmation_token'] = null;
+        $accountData['confirmation_sent_at'] = null;
+        $accountData['confirmated_at'] = Carbon::now();
+        $accountData['password'] = bcrypt($accountData['password']);
+
+        $token = $request->only('confirmation_token');
+
+        $errors = [];
+
+        if (empty($token['confirmation_token'])) {
+            $errors['confirmation_token'] = '不正なアクセスです。';
+        }
+
+        if (!$errors) {
+
+            $account = Account::where('confirmation_token', $token['confirmation_token'])
+                ->where('confirmation_sent_at', '>', Carbon::now()->subDay(config('my.reset_password_request.expires_in')))
+                ->first()
+                ;
+                
+            \DB::beginTransaction();
+
+            if ($account && $account->update($accountData)) {
+                // todo: New create account is new workspace create 
+                \DB::commit();
+                return redirect()
+                    ->route('root.index')
+                    ->with(['info' => '会員情報を登録しました。']);
+            }
+
+            \DB::rollBack();
+
+        }
+
+        return redirect()
+            ->back()
+            ->withError('登録に失敗しました。' . implode(',', $errors))
+            ;
     }
 
 

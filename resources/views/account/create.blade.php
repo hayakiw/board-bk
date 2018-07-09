@@ -1,29 +1,33 @@
 @extends('layout.app')
 
 @php
-    $page_title = '新規作成 | アカウント';
+    $page_title = '会員登録';
 @endphp
 
 @section('content')
-{{ Form::model($account, ['route' => 'accounts.store', 'method' => 'post', 'class' => 'form']) }}
-  <h1>アカウント新規作成</h1>
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="clearfix">
-        @include('account._form', ['account' => $account, 'form_type' => 'create'])
-      </div>
-      <!-- / .clearfix -->
-    </div>
-    <!-- /. panel-body -->
-  </div>
-  <!-- / .panel.panel-default -->
 
-  <div class="clearfix">
-    <div class="fl w15 clearfix">
-      <label class="control-label"> </label>
-      <a href="{{ route('accounts.index') }}" class="btn block btn-default btn-sm w39  m_r2 fl">戻る</a>
-      <button class="btn block btn-success btn-sm w59 fl" type="submit">登録</button>
-    </div>
-  </div>
-{{ Form::close() }}
+    <form class="form" action="{{ route('account.store') }}" accept-charset="utf-8" method="post">
+        @csrf
+      <div class="w50 center">
+        <h1>会員登録</h1>
+      </div>
+      <!-- / . -->
+      <div class="panel panel-default w50 center">
+        <div class="panel-body">
+          <table class="deco-tb w100 m_u20">
+            <tr>
+              <th class="w20"><label class="control-label">メールアドレス <span class="required">*</span></label></th>
+              <td @if ($errors->has('email'))class="has-error"@endif><input type="input" name="email" class="form-control w45" required value="{{ old('email') }}">
+                @if ($errors->has('email'))
+                    <div class="attention">{{ $errors->first('email') }}</div>
+                @endif</td>
+            </tr>
+          </table>
+          <button type="submit" class="btn block btn-info w50 center"> 登録</button>
+        </div>
+        <!-- /. panel-body -->
+      </div>
+      <!-- / .panel.panel-default -->
+    </form>
+
 @endsection
