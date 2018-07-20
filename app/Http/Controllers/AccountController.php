@@ -69,7 +69,7 @@ class AccountController extends Controller
             );
 
             return redirect()
-                ->route('root.index')
+                ->route('account.create')
                 ->with(['info' => '確認メールを送信しましたのでご確認ください。'])
             ;
         }
@@ -82,7 +82,7 @@ class AccountController extends Controller
         ;
     }
 
-    public function confirm(Request $request, $token)
+    public function confirm(Request $request, $token, $wsid = null)
     {
         $account = Account::where('confirmation_token', $token)
             ->where('confirmation_sent_at', '>', Carbon::now()->subDay(config('my.reset_password_request.expires_in')))
@@ -90,7 +90,7 @@ class AccountController extends Controller
             ;
 
         if ($account) {
-            return view('account.confirm', compact('account', 'token'));
+            return view('account.confirm', compact('account', 'token', 'wsid'));
         }
 
         return redirect()
@@ -112,6 +112,7 @@ class AccountController extends Controller
         $accountData['password'] = bcrypt($accountData['password']);
 
         $token = $request->only('confirmation_token');
+        $invite_workspace_id = $request->only('workspace_id');
 
         $errors = [];
 
@@ -129,26 +130,48 @@ class AccountController extends Controller
             \DB::beginTransaction();
 
             if ($account && $account->update($accountData)) {
-                // todo: New create account is new workspace create 
-                $workspaceData = $request->only('workspace');
-                if (!($workspace = Workspace::create($workspaceData['workspace']))) {
-                    $errors[] = 'ワークスペースを登録できませんでした。';
-                }
-
-                if (!$errors) {
-                    $relateData = [
-                        'account_id' => $account->id,
-                        'workspace_id' => $workspace->id,
-                        'role' => AccountWorkspace::ROLE_ADMIN,
-                        'invite_at' => Carbon::now(),
-                    ];
-                    if (!(AccountWorkspace::create($relateData))) {
+                if ($invite_workspace_id && $account->workspace($invite_workspace_id)->invite_at) {
+                    // invite workspace
+                    $workspace = $account->workspace($invite_workspace_id);
+                    $accountWorkSpace = AccountWorkspace::find('workspace_id', $invite_workspace_id);
+                    if (!$accountWorkSpace) {
+                        $errors[] = 'アクセスできませんでした。';
+                    } elseif (!($accountWorkSpace->update([
+                        'entry_at' => Carbon::now(),
+                    ]))) {
+                        $errors[] = 'アクセスできませんでした。';
+                    }
+                } else {
+                    // create workspace
+                    $workspaceData = $request->only('workspace');
+                    if (!($workspace = Workspace::create($workspaceData['workspace']))) {
                         $errors[] = 'ワークスペースを登録できませんでした。';
+                    }
+
+                    if (!$errors) {
+                        $relateData = [
+                            'account_id' => $account->id,
+                            'workspace_id' => $workspace->id,
+                            'role' => AccountWorkspace::ROLE_ADMIN,
+                            'invite_at' => Carbon::now(),
+                        ];
+                        if (!(AccountWorkspace::create($relateData))) {
+                            $errors[] = 'ワークスペースを登録できませんでした。';
+                        }
                     }
                 }
 
                 if (!$errors) {
                     \DB::commit();
+                    $credentials = [
+                        'email' => $account->email,
+                        'password' => $account->password,
+                    ];
+                    if (auth()->guard('web')->attempt($credentials, $remember)) {
+                        return redirect()
+                            ->route('workspaces.show', ['id' => $workspace->id])
+                            ->with('info', 'ログインしました。');
+                    }
                     return redirect()
                         ->route('root.index')
                         ->with(['info' => '会員情報を登録しました。']);
@@ -210,6 +233,17 @@ class AccountController extends Controller
             ->back()
             ->withInput($accountData)
         ;
+    }
+
+    // 管理者向け
+    public function invite_form()
+    {
+        return view('account.invite');
+    }
+
+    public function invite(AccountRequest\InviteRequest $request)
+    {
+        // 
     }
 
     /**

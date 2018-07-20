@@ -65,25 +65,29 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label class="control-label col-md-3">ワークスペース名 <span class="required">*</span></label>
-      <div class="col-md-6{{ ($errors->has('workspace.name')) ? ' has-error' : '' }}">
-        <input type="text" class="form-control" name="workspace[name]" placeholder="" required value="{{ old('workspace.name') }}">
-          @if ($errors->has('workspace.name'))
-              <div class="attention">{{ $errors->first('workspace.name') }}</div>
-          @endif
+    @if ($wsid && $account->workspace($wsid) && !$account->workspace($wsid)->invite_at)
+      <input type="hidden" name="workspace_id" value="{{ $workspace->id }}">
+    @else
+      <div class="form-group">
+        <label class="control-label col-md-3">ワークスペース名 <span class="required">*</span></label>
+        <div class="col-md-6{{ ($errors->has('workspace.name')) ? ' has-error' : '' }}">
+          <input type="text" class="form-control" name="workspace[name]" placeholder="" required value="{{ old('workspace.name') }}">
+            @if ($errors->has('workspace.name'))
+                <div class="attention">{{ $errors->first('workspace.name') }}</div>
+            @endif
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-md-3">ワークスペースの説明 <span class="required">*</span></label>
-      <div class="col-md-6{{ ($errors->has('workspace.description')) ? ' has-error' : '' }}">
+      <div class="form-group">
+        <label class="control-label col-md-3">ワークスペースの説明 <span class="required">*</span></label>
+        <div class="col-md-6{{ ($errors->has('workspace.description')) ? ' has-error' : '' }}">
 
-          <textarea name="workspace[description]" class="form-control" cols="30" rows="10">{{ old('workspace.description') }}</textarea>
-          @if ($errors->has('workspace.description'))
-              <div class="attention">{{ $errors->first('workspace.description') }}</div>
-          @endif
+            <textarea name="workspace[description]" class="form-control" cols="30" rows="10">{{ old('workspace.description') }}</textarea>
+            @if ($errors->has('workspace.description'))
+                <div class="attention">{{ $errors->first('workspace.description') }}</div>
+            @endif
+        </div>
       </div>
-    </div>
+    @endif
     <div class="form-group">
       <div class="col-md-offset-3 col-md-6">
         <input type="hidden" name="confirmation_token" value="{{ $token ? $token : '' }}">

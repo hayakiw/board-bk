@@ -12,7 +12,7 @@ class ActivateRequest extends Request
 
     public function rules()
     {
-        return [
+        $rules = [
             'last_name' => [
                 'required',
                 'max:100',
@@ -38,17 +38,24 @@ class ActivateRequest extends Request
             'password_comfirmation' => [
                 'same:password',
             ],
-
-            'workspace.name' => [
-                'required',
-                'max:255',
-                'unique:workspaces,name',
-            ],
-            'workspace.description' => [
-                'required',
-                'max:1000',
-            ],
         ];
+
+        // 招待者のきりわけ
+        if (!$this->has('workspace_id')) {
+            $rules = array_merge($rules, [
+                'workspace.name' => [
+                    'required',
+                    'max:255',
+                    'unique:workspaces,name',
+                ],
+                'workspace.description' => [
+                    'required',
+                    'max:1000',
+                ],
+            ]);
+        }
+
+        return $rules;
     }
 
     public function attributes ()

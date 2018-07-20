@@ -24,9 +24,11 @@ Route::group(['middleware' => ['guest:web']], function () {
         'uses' => 'AccountController@store',
     ]);
 
-    Route::get('activate/{token}', [
+    Route::get('activate/{token}/{wsid?}', [
         'as' => 'account.confirm',
         'uses' => 'AccountController@confirm',
+    ])->where([
+        'token' => '[a-z0-9]+', 'wsid' => '[0-9]*',
     ]);
 
     Route::post('activate', [
@@ -57,6 +59,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         'uses' => 'RootController@index',
     ]);
 
+    Route::resource('workspaces', 'WorkspaceController');
 
     //アカウント管理
     Route::group(['middleware' => ['auth:web', 'can:account']], function () {
