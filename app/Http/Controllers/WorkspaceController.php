@@ -14,7 +14,8 @@ class WorkspaceController extends Controller
      */
     public function index()
     {
-        //
+        $workspaces = auth()->guard('web')->user()->workspaces;
+        return view('workspace.index', compact('workspaces'));
     }
 
     /**
@@ -47,7 +48,7 @@ class WorkspaceController extends Controller
     public function show($id)
     {
         $workspace = Workspace::findOrFail($id);
-        return 'workspace ' . $workspace->name;
+        return view('workspace.show', compact('workspace'));
     }
 
     /**

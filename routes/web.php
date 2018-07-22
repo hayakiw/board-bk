@@ -61,6 +61,8 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     Route::resource('workspaces', 'WorkspaceController');
 
+    Route::resource('workspaces.groups', 'GroupController');
+
     //アカウント管理
     Route::group(['middleware' => ['auth:web', 'can:account']], function () {
         Route::resource('accounts', 'AccountController');

@@ -66,7 +66,7 @@ $(document).ready(function() {
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         @if($session_guard->check())
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="{{ route('workspaces.index') }}">ワークスペース <span class="sr-only">(current)</span></a></li>
           <li><a href="#">Link</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -109,7 +109,7 @@ $(document).ready(function() {
 </div>
 <!-- / .header -->
 
-<div class="content">
+<div class="container">
     <div class="inner">
       @if (session('info'))
       <div class="alert alert-success alert-dismissible" role="alert">

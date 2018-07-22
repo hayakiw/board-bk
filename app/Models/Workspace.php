@@ -20,4 +20,9 @@ class Workspace extends Model
     {
         return $this->belongsToMany(\App\Models\AccountWorkspace::class, 'accounts_workspaces')->withPivot('invite_at', 'entry_at');
     }
+
+    public function Groups()
+    {
+        return $this->hasMany(\App\Models\Group::class);
+    }
 }
