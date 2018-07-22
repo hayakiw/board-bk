@@ -40,7 +40,7 @@ class Account extends Authenticatable
 
     public function Workspaces()
     {
-        return $this->belongsToMany(\App\Models\Workspace::class)->withPivot('invite_at', 'entry_at');
+        return $this->belongsToMany(\App\Models\Workspace::class, 'accounts_workspaces')->withPivot('invite_at', 'entry_at')->withTimestamps();
     }
 
     public function Workspace($id)

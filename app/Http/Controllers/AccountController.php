@@ -134,30 +134,19 @@ class AccountController extends Controller
                     // invite workspace
                     $workspace = $account->workspace($invite_workspace_id);
                     $accountWorkSpace = AccountWorkspace::find('workspace_id', $invite_workspace_id);
-                    if (!$accountWorkSpace) {
-                        $errors[] = 'アクセスできませんでした。';
-                    } elseif (!($accountWorkSpace->update([
+                    if (!$account->workspaces()->updateExistingPivot($invite_workspace_id, [
                         'entry_at' => Carbon::now(),
-                    ]))) {
+                    ])) {
                         $errors[] = 'アクセスできませんでした。';
                     }
                 } else {
                     // create workspace
                     $workspaceData = $request->only('workspace');
-                    if (!($workspace = Workspace::create($workspaceData['workspace']))) {
+                    if (!($workspace = $account->workspaces()->create($workspaceData['workspace'], [
+                        'role' => AccountWorkspace::ROLE_ADMIN,
+                        'invite_at' => Carbon::now(),
+                    ]))) {
                         $errors[] = 'ワークスペースを登録できませんでした。';
-                    }
-
-                    if (!$errors) {
-                        $relateData = [
-                            'account_id' => $account->id,
-                            'workspace_id' => $workspace->id,
-                            'role' => AccountWorkspace::ROLE_ADMIN,
-                            'invite_at' => Carbon::now(),
-                        ];
-                        if (!(AccountWorkspace::create($relateData))) {
-                            $errors[] = 'ワークスペースを登録できませんでした。';
-                        }
                     }
                 }
 
@@ -167,13 +156,13 @@ class AccountController extends Controller
                         'email' => $account->email,
                         'password' => $account->password,
                     ];
-                    if (auth()->guard('web')->attempt($credentials, $remember)) {
+                    if (auth()->guard('web')->attempt($credentials, true)) {
                         return redirect()
                             ->route('workspaces.show', ['id' => $workspace->id])
                             ->with('info', 'ログインしました。');
                     }
                     return redirect()
-                        ->route('root.index')
+                        ->route('auth.signin')
                         ->with(['info' => '会員情報を登録しました。']);
                 }
             }
