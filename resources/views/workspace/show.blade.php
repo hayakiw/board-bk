@@ -5,7 +5,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-right">
-      <a href="{{ route('workspaces.groups.create', ['workspace' => $workspace->id]) }}">新規作成</a>
+      <a href="{{ route('workspaces.groups.create', ['workspace' => $workspace->id]) }}">グループ作成</a>
   </div>
   <div class="panel-body">
     <table class="table">
@@ -25,7 +25,7 @@
           if ($count++ > 3) break;
         @endphp
         <tr>
-          <td><a href="{{ route('workspaces.groups.show', ['workspaces' => $workspace->id, 'group' => $group]) }}">{{ $group->name }}</a></td>
+          <td><a href="{{ route('workspaces.groups.show', ['workspaces' => $workspace->id, 'group' => $group]) }}">{{ $group->title }}</a></td>
           <td>{{ $group->description }}</td>
         </tr>
         @endforeach

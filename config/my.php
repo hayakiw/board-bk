@@ -17,9 +17,14 @@ return [
         ),
     ],
 
-    'user' => [
+    'account' => [
         'created' => [
             'mail_subject' => 'メールアドレスを登録しました。',
+        ],
+    ],
+    'workspace' => [
+        'invite' => [
+            'mail_subject' => 'ワークスペースに招待されました。',
         ],
     ],
 

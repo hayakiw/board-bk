@@ -43,8 +43,11 @@ class Account extends Authenticatable
         return $this->belongsToMany(\App\Models\Workspace::class, 'accounts_workspaces')->withPivot('invite_at', 'entry_at')->withTimestamps();
     }
 
-    public function Workspace($id)
+    public function workspace($id)
     {
-        return $this->Workspaces->where('workspace_id', $id)->get();
+        return $this->Workspaces()
+            ->where('workspace_id', $id)
+            ->first()
+        ;
     }
 }

@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\Workspace As WorkspaceRequest;
+use Illuminate\Support\Str;
+use Mail;
+use Carbon\Carbon;
+
 use App\Models\Workspace;
+use App\Models\AccountWorkspace;
+use App\Models\Account;
 
 class WorkspaceController extends Controller
 {
@@ -25,7 +32,8 @@ class WorkspaceController extends Controller
      */
     public function create()
     {
-        //
+        $workspace = new Workspace();
+        return view('workspace.create', compact('workspaces'));
     }
 
     /**
@@ -34,9 +42,52 @@ class WorkspaceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(WorkspaceRequest\StoreRequest $request)
     {
-        //
+        $account = auth()->guard('web')->user();
+        // create workspace
+        $workspaceData = $request->only([
+            'name', 'description'
+        ]);
+        \DB::beginTransaction();
+        if (!($workspace = $account->workspaces()->create($workspaceData, [
+            'role' => AccountWorkspace::ROLE_ADMIN,
+            'invite_at' => Carbon::now(),
+            'entry_at' => Carbon::now(),
+        ]))) {
+            \DB::rollback();
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withError('登録できませんでした')
+                ;
+        }
+
+        $accounts = $this->findOrCreateUsersEmail($workspace, $request->only('invites')['invites']);
+        if ($accounts) {
+            foreach ($accounts as $account) {
+                Mail::send(
+                    ['text' => 'mail.workspace_invite'],
+                    compact('account', 'workspace'),
+                    function ($m) use ($account) {
+                        $m->from(
+                            config('my.mail.from'),
+                            config('my.mail.name')
+                        );
+                        $m->to($account->email);
+                        $m->subject(
+                            config('my.workspace.invite.mail_subject')
+                        );
+                    }
+                );
+            }
+        }
+
+        \DB::commit();
+        return redirect()
+            ->route('workspaces.index')
+            ->withInfo('登録しました。')
+            ;
     }
 
     /**
@@ -59,7 +110,8 @@ class WorkspaceController extends Controller
      */
     public function edit($id)
     {
-        //
+        $workspace = auth()->guard('web')->user()->Workspace($id);
+        return view('workspace.edit', compact('workspace'));
     }
 
     /**
@@ -69,9 +121,29 @@ class WorkspaceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(WorkspaceRequest\UpdateRequest $request, $id)
     {
-        //
+        $account = auth()->guard('web')->user();
+        // create workspace
+        $workspaceData = $request->only([
+            'name', 'description'
+        ]);
+        $workspace = $account->workspace($id);
+        \DB::beginTransaction();
+        if (!($workspace->update($workspaceData))) {
+            \DB::rollback();
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withError('更新できませんでした')
+                ;
+        }
+
+        \DB::commit();
+        return redirect()
+            ->route('workspaces.index')
+            ->withInfo('登録しました。')
+            ;
     }
 
     /**
@@ -83,5 +155,38 @@ class WorkspaceController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * @param array $emailes 
+     * 
+     * @return array App\Models\Account
+     */
+    private function findOrCreateUsersEmail($workspace, $invites = [])
+    {
+        $accounts = [];
+        if (count($invites)) {
+            foreach ($invites as $invite ) {
+                $account = Account::where(['email' => $invite['email']])
+                    ->first()
+                ;
+
+                if (!count($account) > 0) {
+                    $token = hash_hmac('sha256', Str::random(40), config('app.key'));
+                    $invite['confirmation_token'] = $token;
+                    $invite['confirmation_sent_at'] = Carbon::now();
+                    $account = Account::create($invite);
+                }
+                AccountWorkspace::create([
+                    'account_id' => $account->id,
+                    'workspace_id' => $workspace->id,
+                    'role' => AccountWorkspace::ROLE_GENERAL,
+                    'invited_at' => Carbon::now(),
+                ]);
+                $accounts[] = $account;
+            }
+        }
+
+        return $accounts;
     }
 }
