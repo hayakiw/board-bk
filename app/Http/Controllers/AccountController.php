@@ -106,6 +106,8 @@ class AccountController extends Controller
             'password',
         ]);
 
+        $accountPassword = $accountData['password'];
+
         $accountData['confirmation_token'] = null;
         $accountData['confirmation_sent_at'] = null;
         $accountData['confirmated_at'] = Carbon::now();
@@ -154,7 +156,7 @@ class AccountController extends Controller
                     \DB::commit();
                     $credentials = [
                         'email' => $account->email,
-                        'password' => $account->password,
+                        'password' => $accountPassword,
                     ];
                     if (auth()->guard('web')->attempt($credentials, true)) {
                         return redirect()

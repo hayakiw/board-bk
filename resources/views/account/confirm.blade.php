@@ -49,7 +49,7 @@
     <div class="form-group">
       <label class="control-label col-md-3">パスワード <span class="required">*</span></label>
       <div class="col-md-6{{ ($errors->has('password')) ? ' has-error' : '' }}">
-        <input type="password" class="form-control" name="password" placeholder="" required value="{{ old('password') }}">
+        <input type="password" class="form-control" name="password" placeholder="" required value="">
           @if ($errors->has('password'))
               <div class="attention">{{ $errors->first('password') }}</div>
           @endif
@@ -58,7 +58,7 @@
     <div class="form-group">
       <label class="control-label col-md-3">パスワード(確認) <span class="required">*</span></label>
       <div class="col-md-6{{ ($errors->has('password_comfirmation')) ? ' has-error' : '' }}">
-        <input type="password" class="form-control" name="password_comfirmation" placeholder="" required value="{{ old('password_comfirmation') }}">
+        <input type="password" class="form-control" name="password_comfirmation" placeholder="" required value="">
           @if ($errors->has('password_comfirmation'))
               <div class="attention">{{ $errors->first('password_comfirmation') }}</div>
           @endif

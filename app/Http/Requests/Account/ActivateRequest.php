@@ -58,42 +58,27 @@ class ActivateRequest extends Request
         return $rules;
     }
 
-    public function attributes ()
+    public function messages()
     {
         return [
-            'last_name' => '姓',
-            'first_name' => '名',
-            'last_name_kana' => 'セイ',
-            'first_name_kana' => 'メイ',
-            'password' => 'パスワード',
-            'password_comfirmation' => 'パスワード（確認）',
-
-            'workspace.name' => 'ワークスペース名',
-            'workspace.description' => 'ワークスペースの説明',
+            'last_name.required' => '姓を入力してください',
+            'last_name.max' => '姓は :max 文字までです',
+            'first_name.required' => '名を入力してください',
+            'first_name.max' => '名は :max 文字までです',
+            'last_name_kana.required' => 'セイを入力してください',
+            'last_name_kana.max' => 'セイは :max 文字までです',
+            'first_name_kana.required' => 'メイを入力してください',
+            'first_name_kana.max' => 'メイは :max 文字までです',
+            'password.required' => 'パスワードを入力してください',
+            'password.max' => 'パスワードは :max 文字までです',
+            'password.alpha_num' => 'パスワードを入力してください',
+            'password_comfirmation.same' => 'パスワードが一致しません',
+            
+            'workspace.name.required' => 'ワークスペース名を入力してください',
+            'workspace.name.max' => 'ワークスペース名は :max 文字までです',
+            'workspace.name.unique' => 'ワークスペース名はすでに使用されています',
+            'workspace.description.required' => 'ワークスペースの説明を入力してください',
+            'workspace.description.max' => 'ワークスペースの説明は :max 文字までです',
         ];
     }
-
-    // public function messages()
-    // {
-    //     return [
-    //         'last_name.required' => '姓を入力してください',
-    //         'last_name.max' => '姓は :max 文字までです',
-    //         'first_name.required' => '名を入力してください',
-    //         'first_name.max' => '名は :max 文字までです',
-    //         'last_name_kana.required' => 'セイを入力してください',
-    //         'last_name_kana.max' => 'セイは :max 文字までです',
-    //         'first_name_kana.required' => 'メイを入力してください',
-    //         'first_name_kana.max' => 'メイは :max 文字までです',
-    //         'password.required' => 'パスワードを入力してください',
-    //         'password.max' => 'パスワードは :max 文字までです',
-    //         'password.alpha_num' => 'パスワードを入力してください',
-    //         'password_confirmation.same' => 'パスワードが一致しません',
-            
-    //         'workspace.name.required.same' => ':attribute を入力してください',
-    //         'workspace.name.max.max' => ':attribute は :max 文字までです',
-    //         'workspace.name.unique.unique' => ':attribute はすでに使用されています',
-    //         'workspace.description.required' => ':attribute を入力してください',
-    //         'workspace.description.max' => 'パスワードが一致しません',
-    //     ];
-    // }
 }
