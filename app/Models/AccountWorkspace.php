@@ -28,4 +28,9 @@ class AccountWorkspace extends Pivot
             self::ROLE_GENERAL => '一般',
         ];
     }
+
+    public function getRole()
+    {
+        return array_get($this->GetRoles(), $this->role, '');
+    }
 }

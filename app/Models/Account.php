@@ -38,16 +38,25 @@ class Account extends Authenticatable
         return $this->first_name;
     }
 
-    public function Workspaces()
+    public function getFullName()
     {
-        return $this->belongsToMany(\App\Models\Workspace::class, 'accounts_workspaces')->withPivot('invite_at', 'entry_at')->withTimestamps();
+        return $this->last_name . ' ' . $this->first_name;
     }
 
-    public function workspace($id)
+    public function Workspaces()
+    {
+        return $this->belongsToMany(\App\Models\Workspace::class, 'accounts_workspaces')
+            ->using(\App\Models\AccountWorkspace::class)
+            ->as('property')
+            ->withPivot('invite_at', 'entry_at', 'role')
+            ->withTimestamps();
+    }
+
+    public function Workspace($id)
     {
         return $this->Workspaces()
             ->where('workspace_id', $id)
-            ->first()
+            // ->first()
         ;
     }
 }

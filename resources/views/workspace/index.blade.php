@@ -5,7 +5,6 @@
 
 <div class="container-fluid">
   <div class="text-right">
-    <a href="#TODO">メンバー管理</a>
     <a href="{{ route('workspaces.create') }}" class="btn btn-default">新規登録</a>
   </div>
 

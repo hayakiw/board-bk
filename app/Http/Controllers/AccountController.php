@@ -227,9 +227,9 @@ class AccountController extends Controller
     }
 
     // 管理者向け
-    public function invite_form()
+    public function inviteForm()
     {
-        return view('account.invite');
+        return view('workspace.member.invite_form');
     }
 
     public function invite(AccountRequest\InviteRequest $request)

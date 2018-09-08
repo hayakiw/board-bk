@@ -5,7 +5,8 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-right">
-      <a href="{{ route('workspaces.groups.create', ['workspace' => $workspace->id]) }}">グループ作成</a>
+    <a href="{{ route('workspace.members', ['workspace' => $workspace->id]) }}">メンバー管理</a>
+    <a href="{{ route('workspaces.groups.create', ['workspace' => $workspace->id]) }}">グループ作成</a>
   </div>
   <div class="panel-body">
     <table class="table">

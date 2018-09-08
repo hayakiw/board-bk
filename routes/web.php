@@ -64,7 +64,21 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::resource('workspaces.groups', 'GroupController');
 
     //アカウント管理
+    Route::get('workspaces/{workspace}/members', [
+        'as' => 'workspace.members',
+        'uses' => 'WorkspaceController@members',
+    ]);
+
     Route::group(['middleware' => ['auth:web', 'can:account']], function () {
+        Route::get('workspaces/{workspace}/member/invite', [
+            'as' => 'account.invite_form',
+            'uses' => 'AccountController@inviteForm',
+        ]);
+        Route::get('workspaces/member/invite', [
+            'as' => 'account.invite',
+            'uses' => 'AccountController@invite',
+        ]);
+
         Route::resource('accounts', 'AccountController');
     });
 

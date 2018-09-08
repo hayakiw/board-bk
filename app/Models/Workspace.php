@@ -18,7 +18,11 @@ class Workspace extends Model
 
     public function Accounts()
     {
-        return $this->belongsToMany(\App\Models\AccountWorkspace::class, 'accounts_workspaces')->withPivot('invite_at', 'entry_at');
+        return $this->belongsToMany(\App\Models\Account::class, 'accounts_workspaces')
+            ->using(\App\Models\AccountWorkspace::class)
+            ->as('property')
+            ->withPivot('invite_at', 'entry_at', 'role')
+            ->withTimestamps();
     }
 
     public function Groups()

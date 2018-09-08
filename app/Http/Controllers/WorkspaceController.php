@@ -33,7 +33,7 @@ class WorkspaceController extends Controller
     public function create()
     {
         $workspace = new Workspace();
-        return view('workspace.create', compact('workspaces'));
+        return view('workspace.create', compact('workspace'));
     }
 
     /**
@@ -98,8 +98,14 @@ class WorkspaceController extends Controller
      */
     public function show($id)
     {
-        $workspace = Workspace::findOrFail($id);
+        $workspace = auth()->guard('web')->user()->workspace($id)->firstOrFail();
         return view('workspace.show', compact('workspace'));
+    }
+
+    public function members($id)
+    {
+        $workspace = auth()->guard('web')->user()->workspace($id)->firstOrFail();
+        return view('workspace.member', compact('workspace'));
     }
 
     /**
