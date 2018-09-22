@@ -1,5 +1,13 @@
 @extends('layout.app')
 
+@php
+  $layout = [
+    'js' => [
+      'invite_form',
+    ],
+  ];
+@endphp
+
 @section('content')
 <h1>ワークスペース - 新規登録</h1>
 

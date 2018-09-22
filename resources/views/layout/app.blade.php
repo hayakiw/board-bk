@@ -130,6 +130,16 @@ $(document).ready(function() {
 @if (isset($page_js))
 <script src="{{ asset('js/' . $page_js . '.js?2') }}"></script>
 @endif
+@if (isset($layout['js']))
+  @php 
+  if (!is_array($layout['js'])) {
+    $layout['js'] = [$layout['js']];
+  }
+  @endphp
+  @foreach ($layout['js'] as $js)
+<script src="{{ asset('js/' . $js . '.js') }}?{{ get_asset_timestamp('js/' . $js . '.js') }}"></script>
+  @endforeach
+@endif
 <script type="text/javascript">@stack('script_codes')</script>
 
 </body>

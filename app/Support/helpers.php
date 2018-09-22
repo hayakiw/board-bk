@@ -136,3 +136,21 @@ if ( ! function_exists('family_size')) {
         ];
     }
 }
+
+if (!function_exists('get_asset_timestamp')) {
+    function get_asset_timestamp($path)
+    {
+        $timestamp = '';
+        if (file_exists(public_path($path))) {
+            try {
+                if (($filetime = filemtime(public_path($path))) !== false) {
+                    $timestamp = date('ymdHis', $filetime);
+                }
+            } catch (Exception $e) {
+                return '';
+            }
+            return $timestamp;
+        }
+        return $timestamp;
+    }
+}

@@ -5,7 +5,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading text-right">
-    <a href="{{ route('account.invite_form', ['workspace' => $workspace->id]) }}">招待</a>
+    <a href="{{ route('workspace.member.invite_form', ['workspace' => $workspace->id]) }}">招待</a>
   </div>
   <div class="panel-body">
     <table class="table table-striped">

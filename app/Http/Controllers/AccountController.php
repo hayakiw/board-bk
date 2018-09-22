@@ -226,17 +226,6 @@ class AccountController extends Controller
         ;
     }
 
-    // 管理者向け
-    public function inviteForm()
-    {
-        return view('workspace.member.invite_form');
-    }
-
-    public function invite(AccountRequest\InviteRequest $request)
-    {
-        // 
-    }
-
     /**
      * Remove the specified resource from storage.
      *

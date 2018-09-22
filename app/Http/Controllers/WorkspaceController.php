@@ -116,7 +116,7 @@ class WorkspaceController extends Controller
      */
     public function edit($id)
     {
-        $workspace = auth()->guard('web')->user()->Workspace($id);
+        $workspace = auth()->guard('web')->user()->Workspace($id)->firstOrFail();
         return view('workspace.edit', compact('workspace'));
     }
 
@@ -134,7 +134,7 @@ class WorkspaceController extends Controller
         $workspaceData = $request->only([
             'name', 'description'
         ]);
-        $workspace = $account->workspace($id);
+        $workspace = $account->workspace($id)->firstOrFail();
         \DB::beginTransaction();
         if (!($workspace->update($workspaceData))) {
             \DB::rollback();
@@ -161,6 +161,18 @@ class WorkspaceController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // 管理者向け
+    public function inviteForm($workspace_id)
+    {
+        $workspace = auth()->guard('web')->user()->Workspace($workspace_id)->firstOrFail();
+        return view('workspace.member.invite_form', compact('workspace'));
+    }
+
+    public function invite(WorkspaceRequest\InviteRequest $request)
+    {
+        // 
     }
 
     /**
