@@ -170,9 +170,34 @@ class WorkspaceController extends Controller
         return view('workspace.member.invite_form', compact('workspace'));
     }
 
-    public function invite(WorkspaceRequest\InviteRequest $request)
+    public function invite(WorkspaceRequest\InviteRequest $request, $workspace_id)
     {
-        // 
+        $workspace = auth()->guard('web')->user()->Workspace($workspace_id)->firstOrFail();
+
+        $accounts = $this->findOrCreateUsersEmail($workspace, $request->only('invites')['invites']);
+        if ($accounts) {
+            foreach ($accounts as $account) {
+                Mail::send(
+                    ['text' => 'mail.workspace_invite'],
+                    compact('account', 'workspace'),
+                    function ($m) use ($account) {
+                        $m->from(
+                            config('my.mail.from'),
+                            config('my.mail.name')
+                        );
+                        $m->to($account->email);
+                        $m->subject(
+                            config('my.workspace.invite.mail_subject')
+                        );
+                    }
+                );
+            }
+        }
+
+        return redirect()
+            ->route('workspaces.index')
+            ->withInfo('メンバーを招待しました。')
+            ;
     }
 
     /**

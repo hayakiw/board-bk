@@ -31,6 +31,7 @@ class InviteRequest extends Request
         }
         $rules['invites.*.email'] = [
             'required',
+            'email',
         ];
 
         return $rules;
