@@ -29,4 +29,11 @@ class Workspace extends Model
     {
         return $this->hasMany(\App\Models\Group::class);
     }
+
+    public function Group($id)
+    {
+        return $this->Groups()
+            ->where('id', $id)
+            ;
+    }
 }

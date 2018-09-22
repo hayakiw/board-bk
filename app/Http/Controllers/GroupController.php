@@ -48,7 +48,7 @@ class GroupController extends Controller
 
         if ($group = Group::create($groupData)) {
             return redirect()
-                ->route('workspaces.groups.index', $workspace->id)
+                ->route('workspaces.show', $workspace->id)
                 ->with(['info' => '登録しました。'])
                 ;
         }
@@ -69,7 +69,7 @@ class GroupController extends Controller
     {
         $workspace = Workspace::findOrFail($wsid);
         $group = Group::findOrFail($id);
-        return view('group.edit', compact('workspace', 'group'));
+        return view('group.show', compact('workspace', 'group'));
     }
 
     /**
@@ -80,7 +80,9 @@ class GroupController extends Controller
      */
     public function edit($wsid, $id)
     {
-        //
+        $workspace = auth()->guard('web')->user()->Workspace($wsid)->firstOrFail();
+        $group = $workspace->Group($id)->firstOrFail();
+        return view('group.edit', compact('workspace', 'group'));
     }
 
     /**

@@ -10,7 +10,7 @@
 <div class="form-group">
   <div class="col-md-offset-4 col-md-4">
     <input type="submit" value="保存" class="btn btn-success">
-    <a href="{{ route('workspaces.groups.index', ['workspaces' => $workspace->id]) }}" class="btn btn-default">戻る</a>
+    <a href="{{ route('workspaces.show', ['workspaces' => $workspace->id]) }}" class="btn btn-default">戻る</a>
   </div>
 </div>
 

@@ -61,7 +61,9 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     Route::resource('workspaces', 'WorkspaceController');
 
-    Route::resource('workspaces.groups', 'GroupController');
+    Route::resource('workspaces.groups', 'GroupController')->except([
+        'index',
+    ]);
 
     //アカウント管理
     Route::get('workspaces/{workspace}/members', [

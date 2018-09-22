@@ -10,7 +10,7 @@
 <div>
   <div>
     <input type="submit" value="保存">
-    <a href="{{ route('workspaces.groups.index', ['workspace' => $workspace->id]) }}">戻る</a>
+    <a href="{{ route('workspaces.show', ['workspace' => $workspace->id]) }}">戻る</a>
   </div>
 </div>
 
