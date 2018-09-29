@@ -14,6 +14,7 @@
         <tr>
           <th>グループ</th>
           <th>説明</th>
+          <th>編集</th>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +29,7 @@
         <tr>
           <td><a href="{{ route('workspaces.groups.show', ['workspaces' => $workspace->id, 'group' => $group]) }}">{{ $group->title }}</a></td>
           <td>{{ $group->description }}</td>
+          <td><a href="{{ route('workspaces.groups.edit', ['workspace' => $workspace->id, 'group' => $group->id]) }}" class="btn btn-default">編集</a></td>
         </tr>
         @endforeach
         @endif

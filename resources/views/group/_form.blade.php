@@ -11,7 +11,7 @@
 <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
   <label for="" class="control-label col-md-4">説明</label>
   <div class="col-md-4">
-    <input type="text" name="description" value="{{ old('description') ? old('description') : $group->description }}" class="form-control">
+    <textarea name="description" class="form-control" id="" cols="30" rows="10">{{ old('description') ? old('description') : $group->description }}</textarea>
     @if ($errors->has('description'))
       <p>{{ $errors->first('description') }}</p>
     @endif

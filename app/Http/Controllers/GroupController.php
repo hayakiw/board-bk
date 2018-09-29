@@ -92,9 +92,23 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(GroupRequest\UpdateRequest $request, $id)
+    public function update(GroupRequest\UpdateRequest $request, $wsid, $id)
     {
-        //
+        $workspace = auth()->guard('web')->user()->Workspace($wsid)->firstOrFail();
+        $group = $workspace->Group($id)->firstOrFail();
+        $groupData = $request->only(['title', 'description']);
+
+        if ($group->update($groupData)) {
+            return redirect()
+                ->route('workspaces.groups.show', ['workspace' => $workspace->id, 'group' => $group->id])
+                ->with(['info' => '登録しました。'])
+                ;
+        }
+
+        return redirect()
+            ->back()
+            ->withError('失敗しました。')
+            ;
     }
 
     /**
