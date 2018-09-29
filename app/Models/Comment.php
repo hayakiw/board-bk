@@ -13,6 +13,16 @@ class Comment extends Model
     // protected $table = '';
 
     protected $fillable = [
-        'comment', 'commentable_id', 'commentable_type',
+        'comment', 'commentable_id', 'commentable_type', 'account_id',
     ];
+
+    public function commentable()
+    {
+        return $this->morphTo();
+    }
+
+    public function Account()
+    {
+        return $this->belongsTo(\App\Models\Account::class);
+    }
 }

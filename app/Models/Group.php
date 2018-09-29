@@ -15,4 +15,16 @@ class Group extends Model
     protected $fillable = [
         'workspace_id', 'title', 'description',
     ];
+
+    public function Boards()
+    {
+        return $this->hasMany(\App\Models\Board::class);
+    }
+
+    public function Board($id)
+    {
+        return $this->Boards()
+            ->where('id', $id)
+            ;
+    }
 }

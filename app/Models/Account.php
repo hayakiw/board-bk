@@ -59,4 +59,9 @@ class Account extends Authenticatable
             // ->first()
         ;
     }
+
+    public function Comments()
+    {
+        return $this->hasMany(\App\Models\Comment::class);
+    }
 }

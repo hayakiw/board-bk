@@ -65,9 +65,28 @@ Route::group(['middleware' => ['auth:web']], function () {
         'index',
     ]);
 
-    Route::resource('workspaces.groups.board', 'BoardController')->except([
-        'index',
-    ]);
+    Route::resource('workspaces.groups.boards', 'BoardController');
+
+    // コメント
+    Route::post('workspaces/{workspace}/groups/{group}/{type}/{id}/comments', [
+        'as' => 'workspaces.groups.comments.store',
+        'uses' => 'CommentController@store',
+    ])->where('type', '(board|event)');
+
+    Route::get('workspaces/{workspace}/groups/{group}/{type}/{id}/comments/{comment}/edit', [
+        'as' => 'workspaces.groups.comments.edit',
+        'uses' => 'CommentController@edit',
+    ])->where('type', '(board|event)');
+
+    Route::put('workspaces/{workspace}/groups/{group}/{type}/id/comments/{comment}', [
+        'as' => 'workspaces.groups.comments.update',
+        'uses' => 'CommentController@update',
+    ])->where('type', '(board|event)');
+
+    Route::delete('workspaces/{workspace}/groups/{group}/{type}/{id}/comments/{comment}', [
+        'as' => 'workspaces.groups.comments.destroy',
+        'uses' => 'CommentController@destroy',
+    ])->where('type', '(board|event)');
 
     //アカウント管理
     Route::get('workspaces/{workspace}/members', [

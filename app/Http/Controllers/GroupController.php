@@ -69,7 +69,8 @@ class GroupController extends Controller
     {
         $workspace = Workspace::findOrFail($wsid);
         $group = Group::findOrFail($id);
-        return view('group.show', compact('workspace', 'group'));
+        $boards = $group->boards()->limit(10)->get();
+        return view('group.show', compact('workspace', 'group', 'boards'));
     }
 
     /**
