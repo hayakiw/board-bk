@@ -13,7 +13,7 @@ class Comment extends Model
     // protected $table = '';
 
     protected $fillable = [
-        'comment', 'commentable_id', 'commentable_type', 'account_id',
+        'comment', 'commentable_id', 'commentable_type', 'account_id', 'seq',
     ];
 
     public function commentable()

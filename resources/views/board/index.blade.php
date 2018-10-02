@@ -3,6 +3,9 @@
 @section('content')
 <h1>{{ $group->title }} - 掲示板一覧</h1>
 
+<div class="test-right">
+  <a href="{{ route('workspaces.groups.boards.create', ['workspace' => $workspace->id, 'group' => $group->id]) }}" class="btn btn-default">新規作成</a>
+</div>
 <table class="table table-hover">
   <thead>
     <tr>

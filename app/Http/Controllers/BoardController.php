@@ -49,11 +49,12 @@ class BoardController extends Controller
         $boardData = $request->only(['title', 'description']);
         $boardData['group_id'] = $group->id;
 
-        if ($group = $group->boards()->create($boardData)) {
+        if ($board = $group->boards()->create($boardData)) {
             return redirect()
-                ->route('workspaces.groups.boards.index', [
+                ->route('workspaces.groups.boards.show', [
                     'workspace' => $workspace->id,
                     'group' => $group->id,
+                    'board' => $board->id,
                     ])
                 ->with(['info' => '登録しました。'])
                 ;

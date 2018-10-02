@@ -40,16 +40,20 @@ class CommentController extends Controller
         $group = $workspace->group($grpid)->firstOrFail();
         $var_type = $group->$type($type_id)->firstOrFail();
 
+        \DB::beginTransaction();
         $commentData = $request->only(['comment', 'commentable_type']);
         $commentData['commentable_id'] = $type_id;
         $commentData['account_id'] = auth()->guard('web')->user()->id;
+        $commentData['seq'] = $var_type->getSequence();
 
         if ($comment = $var_type->comments()->create($commentData)) {
+            \DB::commit();
             return redirect()
                 ->back()
                 ->with(['info' => '登録しました。'])
                 ;
         }
+        \DB::rollBack();
 
         return redirect()
             ->back()

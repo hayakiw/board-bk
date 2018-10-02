@@ -15,4 +15,33 @@ class Event extends Model
     protected $fillable = [
         'group_id', 'title', 'description',
     ];
+
+    public function Group()
+    {
+        return $this->belongsTo(\App\Models\Group::class);
+    }
+
+    public function Comments()
+    {
+        return $this->morphMany(\App\Models\Comment::class, 'commentable');
+    }
+
+    public function new()
+    {
+        return $this->comments()
+            ->orderBy('created_at', 'desc')
+            ->first()
+            ;
+    }
+
+    public function getSequence()
+    {
+        $comment = $this->comments()
+            ->withTrashed()
+            ->orderBy('seq', 'desc')
+            ->first()
+            ;
+
+        return $comment->seq ? $comment->seq + 1 : 1;
+    }
 }

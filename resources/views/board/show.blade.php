@@ -2,6 +2,11 @@
 
 @section('content')
 <h1>{{ $board->title }}</h1>
+<div class="panel panel-default">
+  <div class="panel-body">
+    {!! nl2br(e($board->description)) !!}
+  </div>
+</div>
 
 
 <div class="panel panel-default">
@@ -9,11 +14,11 @@
 
     @if ($comments)
       @foreach ($comments as $comment)
-    <div class="row">
-      <div class="col-md-4">{{ $comment->account->getFullName() }}</div>
+    <div class="row" id="comment-{{ $comment->seq }}">
+      <div class="col-md-4">#{{ $comment->seq }} {{ $comment->account->getFullName() }}</div>
       <div class="col-md-4 col-md-offset-4 text-right">{{ $comment->created_at }} edit trash</div>
       
-      <div class="col-md-12">{{ $comment->comment }}</div>
+      <div class="col-md-12">{!! nl2br(e($comment->comment)) !!}</div>
     </div><hr>
       @endforeach
     @endif

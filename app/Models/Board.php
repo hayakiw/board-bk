@@ -33,4 +33,15 @@ class Board extends Model
             ->first()
             ;
     }
+
+    public function getSequence()
+    {
+        $comment = $this->comments()
+            ->withTrashed()
+            ->orderBy('seq', 'desc')
+            ->first()
+            ;
+
+        return ($comment && $comment->seq) ? $comment->seq + 1 : 1;
+    }
 }

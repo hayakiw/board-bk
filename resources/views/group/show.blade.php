@@ -7,6 +7,9 @@
   <div class="panel-heading">
     掲示板
     <a href="{{ route('workspaces.groups.boards.index', ['workspace' => $workspace->id, 'group' => $group->id]) }}">すべて表示</a>
+    <div class="test-right">
+      <a href="{{ route('workspaces.groups.boards.create', ['workspace' => $workspace->id, 'group' => $group->id]) }}" class="btn btn-default">新規作成</a>
+    </div>
   </div>
   <div class="panel-body">
     <table class="table table-hover">
@@ -27,7 +30,7 @@
           @php
               $new = $board->new();
           @endphp
-          <td>{{ $new->comment }} : {{ $new->updated_at }}</td>
+          <td>@if($new) {{ $new->comment }} : {{ $new->updated_at }} @endif</td>
           <td><a href="{{ route('workspaces.groups.boards.show', ['workspace' => $workspace->id, 'group' => $group->id, 'board' => $board->id]) }}">表示</a></td>
         </tr>
           @endforeach
