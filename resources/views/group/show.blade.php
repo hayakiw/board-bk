@@ -24,8 +24,11 @@
         <tr>
           <th>{{ $board->title }}</th>
           <td>{{ $board->description }}</td>
-          <td>{{ $board->new() }}</td>
-          <td><a href="{{ route('workspaces.groups.borads.show', ['workspace' => $workspace->id, 'group' => $group->id, 'board' => $board->id]) }}">表示</a></td>
+          @php
+              $new = $board->new();
+          @endphp
+          <td>{{ $new->comment }} : {{ $new->updated_at }}</td>
+          <td><a href="{{ route('workspaces.groups.boards.show', ['workspace' => $workspace->id, 'group' => $group->id, 'board' => $board->id]) }}">表示</a></td>
         </tr>
           @endforeach
         @endif
