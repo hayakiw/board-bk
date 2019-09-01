@@ -25,4 +25,9 @@ class Comment extends Model
     {
         return $this->belongsTo(\App\Models\Account::class);
     }
+
+    public function isAccountHas($account_id)
+    {
+        return ($this->account_id == $account_id);
+    }
 }

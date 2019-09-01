@@ -21,7 +21,10 @@
     <tr>
       <th>{{ $board->title }}</th>
       <td>{{ $board->description }}</td>
-      <td>{{ $board->new() }}</td>
+      @php
+          $post = $board->new();
+      @endphp
+      <td>{{ $post->account->getFullName() }}：{{ $post->updated_at }}<br>{{ $post->comment }}</td>
       <td><a href="{{ route('workspaces.groups.boards.show', ['workspace' => $workspace->id, 'group' => $group->id, 'board' => $board->id]) }}">表示</a></td>
     </tr>
       @endforeach

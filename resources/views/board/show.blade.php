@@ -16,7 +16,18 @@
       @foreach ($comments as $comment)
     <div class="row" id="comment-{{ $comment->seq }}">
       <div class="col-md-4">#{{ $comment->seq }} {{ $comment->account->getFullName() }}</div>
-      <div class="col-md-4 col-md-offset-4 text-right">{{ $comment->created_at }} edit trash</div>
+      <div class="col-md-4 col-md-offset-4 text-right">{{ $comment->created_at }} @if($comment->isAccountHas(auth('web')->user()->id)) 
+        <div class="dropdown" style="display:inline-block;">
+          <a class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu pull-right" role="menu">
+            <li role="presentation"><a href="#">編集</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a href="#">削除</a></li>
+          </ul>
+        </div>
+      @endif</div>
       
       <div class="col-md-12">{!! nl2br(e($comment->comment)) !!}</div>
     </div><hr>

@@ -30,7 +30,7 @@
           @php
               $new = $board->new();
           @endphp
-          <td>@if($new) {{ $new->comment }} : {{ $new->updated_at }} @endif</td>
+          <td>@if($new) {{ $new->account->getFullName() }} : {{ $new->updated_at }}<br>{{ $new->comment}} @endif</td>
           <td><a href="{{ route('workspaces.groups.boards.show', ['workspace' => $workspace->id, 'group' => $group->id, 'board' => $board->id]) }}">表示</a></td>
         </tr>
           @endforeach
