@@ -220,12 +220,14 @@ class WorkspaceController extends Controller
                     $invite['confirmation_sent_at'] = Carbon::now();
                     $account = Account::create($invite);
                 }
-                AccountWorkspace::create([
-                    'account_id' => $account->id,
-                    'workspace_id' => $workspace->id,
+                $relateWorkspace = $account->workspace($workspace->id)->first();
+                if ($relateWorkspace->property->entry_at != null) continue;
+                
+                $account->workspaces()->detach($workspace->id);
+                $account->workspaces()->attach([$workspace->id => [
                     'role' => AccountWorkspace::ROLE_GENERAL,
-                    'invited_at' => Carbon::now(),
-                ]);
+                    'invite_at' => Carbon::now(),
+                ]]);
                 $accounts[] = $account;
             }
         }

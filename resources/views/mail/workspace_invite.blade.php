@@ -5,7 +5,7 @@
 @if ($account->confirmation_token)
 以下のURLから会員情報の入力を行いアクセスしてください。
 
-{{ route('account.confirm', $account->confirmation_token) }}
+{{ route('account.confirm', ['token' => $account->confirmation_token, 'wsid' => $workspace->id]) }}
 @else
 以下のURLからワークスペースにアクセスしてください。
 

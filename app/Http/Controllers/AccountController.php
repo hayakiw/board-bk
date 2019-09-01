@@ -114,7 +114,7 @@ class AccountController extends Controller
         $accountData['password'] = bcrypt($accountData['password']);
 
         $token = $request->only('confirmation_token');
-        $invite_workspace_id = $request->only('workspace_id');
+        $invite_workspace_id = $request->input('workspace_id');
 
         $errors = [];
 
@@ -132,10 +132,14 @@ class AccountController extends Controller
             \DB::beginTransaction();
 
             if ($account && $account->update($accountData)) {
-                if ($invite_workspace_id && $account->workspace($invite_workspace_id)->invite_at) {
+                $workspace = null;
+                if ($invite_workspace_id) {
+                    $workspace = $account->workspace($invite_workspace_id)->first();
+                }
+
+                if ($workspace && $workspace->property->invite_at) {
                     // invite workspace
-                    $workspace = $account->workspace($invite_workspace_id);
-                    $accountWorkSpace = AccountWorkspace::find('workspace_id', $invite_workspace_id);
+                    
                     if (!$account->workspaces()->updateExistingPivot($invite_workspace_id, [
                         'entry_at' => Carbon::now(),
                     ])) {

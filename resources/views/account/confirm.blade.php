@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    @if ($wsid && $account->workspace($wsid) && !$account->workspace($wsid)->invite_at)
+    @if ($wsid && ($workspace = $account->workspace($wsid)->first()) && $workspace->property->invite_at != null)
       <input type="hidden" name="workspace_id" value="{{ $workspace->id }}">
     @else
       <div class="form-group">
