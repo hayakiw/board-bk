@@ -5,6 +5,7 @@ Homestead.json
 Homestead.yaml
 package-lock.json
 .env
+.env.testing
 .vagrant/
 /.php_cs.cache
 /package
