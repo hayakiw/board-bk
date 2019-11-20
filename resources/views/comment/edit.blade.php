@@ -1,6 +1,6 @@
-@extends('layout.app')
+{{-- @extends('layout.app')
 
-@section('content')
+@section('content') --}}
 
 {!! Form::open(['url' => route('workspaces.groups.comments.update', $params), 'class' => 'form-horizontal', 'method' => 'put']) !!}
 
@@ -8,10 +8,11 @@
 
 <div>
   <div>
-    <input type="submit" value="更新" class="btn btn-success">
+    <a class="btn btn-default btn-cancel-comment" href="#">キャンセル</a>
+    <input type="submit" value="更新" class="btn btn-success btn-submit-comment">
   </div>
 </div>
 
 {!! Form::close() !!}
 
-@endsection
+{{-- @endsection --}}

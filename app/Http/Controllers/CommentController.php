@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Comment As CommentRequest;
 
+use App\Models\Comment;
+
 class CommentController extends Controller
 {
     /**
@@ -92,6 +94,8 @@ class CommentController extends Controller
             'comment' => $id
         ];
 
+        $comment = Comment::findOrFail($id);
+
         return view('comment.edit', compact('params', 'comment'));
     }
 
@@ -102,9 +106,26 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CommentRequest\UpdateRequest $request, $id)
+    public function update(CommentRequest\UpdateRequest $request, $wsid, $grpid, $type, $type_id, $id)
     {
-        //
+        $workspace = auth()->guard('web')->user()->workspace($wsid)->firstOrFail();
+        $group = $workspace->group($grpid)->firstOrFail();
+        $var_type = $group->$type($type_id)->firstOrFail();
+
+        $inputData = $request->only([
+            'comment',
+        ]);
+        $comment = Comment::findOrFail($id);
+
+        // TODO: viewを返すように変更する
+        if ($comment->update($inputData)) {
+            return redirect()
+                ->back();
+        }
+
+        return redirect()
+            ->back()
+            ->withErrors('更新できませんでした。');
     }
 
     /**

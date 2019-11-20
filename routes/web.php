@@ -78,7 +78,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         'uses' => 'CommentController@edit',
     ])->where('type', '(board|event)');
 
-    Route::put('workspaces/{workspace}/groups/{group}/{type}/id/comments/{comment}', [
+    Route::put('workspaces/{workspace}/groups/{group}/{type}/{id}/comments/{comment}', [
         'as' => 'workspaces.groups.comments.update',
         'uses' => 'CommentController@update',
     ])->where('type', '(board|event)');
